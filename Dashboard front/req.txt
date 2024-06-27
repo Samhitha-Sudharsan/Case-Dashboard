@@ -1,0 +1,93 @@
+Lot : Lot numbers 1-999
+Section 17 : Types - receiver , commisioner, etc
+Final Award : number of cases (and status ? )
+Hold cases : number of cases (and case number)
+Settled cases : number of cases (and case number)
+
+Lot number redirect page: 
+    Cases under that lot number
+    Under each case number :
+        status of case : ongoing/pending/on hold/settled awarded 
+        claim date
+        notice dispatch dates
+        hearing dates
+        Section 17 type
+Section 17:
+    number of cases in each type with case number   
+    (furnished security
+    attachment order, etc.)
+
+Final Award :
+    number of cases 
+    status of the final award and case number
+
+Hold cases : number of cases and case numbers
+Settled cases : number of cases and case numbers
+    
+
+Under MIS :
+    Contract number 
+    Borrower name
+    Lot number
+    Case number
+    MD/MCCI/MAS
+    Claim amount
+    Sec 21 date of dispatch
+    Arbitrator name
+    notice date
+    notice dispatch date
+    Hearing dates
+    Claim date
+    Evidence filed date
+    Award date
+    Award dispatch date
+    Sec 17 raised date
+    type of sec 17
+    sec 17 petition date 
+    Sec 17 dispatch date
+    overall status of the case
+
+
+FInal Details required:
+
+1. Lot number
+2. Cases under the lot
+3. Case number
+4. Contract number
+5. Case status - ongoing/pending/on hold/settled/awarded/final hearin/claim petition
+6. Hearing dates
+7. notice dates
+8. Notice dispatch dates
+9. Sec 17 raised date
+10. type of sec 17
+11. sec 17 petition date 
+12. Sec 17 dispatch date
+13. Award date
+14. Award dispatch date 
+15. Arbitrator name
+16. MD/MCCI/MAS
+17. Claim amount
+18. Sec 21 dispatch
+19. Claim date
+20. Evidence filed date
+21. Borrower name
+
+
+
+agent - specific cases
+
+
+
+Intermediate tables 
+specific tables for MIS
+fronetnd pakages
+
+AG Grid : https://www.ag-grid.com/ (backup , paid , can show a table without features)
+Datatables : https://datatables.net/ (good to implement, has features and an available API , tends to be slow , compatible with js and css)
+bootstrap table : https://bootstrap-table.com/ (needs installation , suuports bootstrap with js , )
+
+hands-on-table: https://handsontable.com/ (compatible with plain javascript , easy to implement)
+
+tabulator : https://tabulator.info/ (has react, vue and angular listed as supported frameworks , has features and a sample code )
+
+grid js :https://gridjs.io/ (javascript package , very simple  ) 

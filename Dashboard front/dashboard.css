@@ -1,0 +1,134 @@
+body {
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
+    background-color:gainsboro;
+  }
+.imagelogo{
+    width: 50px;
+    float: left;
+    height:fit-content;
+    margin: 5px;
+    padding-left: 1cm;
+}
+.header{
+    float: left;
+    padding-left: 1cm;
+    color:linen;
+}
+  #home {
+    background-color:#00838c;
+    padding-bottom: 1cm;
+    margin-left: -1cm;
+    margin-right: -1cm;
+    margin-top: -1cm;
+    padding-top: 1cm;
+    padding-bottom: 1cm;
+    height: 10mm;
+  }
+  
+  .topmenu {
+    color:linen;
+    margin: 10px;
+    padding: 20px;
+    font-size: 20px;
+    align-self: center;
+    text-decoration: none;
+  }
+  
+  .topmenu:hover {
+    color:indigo;
+    text-align: center;
+  }
+  
+  .topdiv {
+    float: right;
+    text-align: center;
+    padding-right: 2cm;
+  }
+
+
+  .elements {
+    float: left;
+    padding-left: 0.1cm;
+    font-size: x-small;
+    align-self: center;
+    display: contents;
+    justify-content: space-evenly;
+  }
+  
+  h1 {
+    text-align: center;
+  }
+
+  #buttonsubmit {
+    margin-left: 50px;
+  }
+  
+
+  .dropbtn {
+    background-color: #00838c;
+    color:linen;
+  
+    font-size: 10px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .dropbtn:hover,
+  .dropbtn:focus {
+    background-color:darkslateblue;
+  }
+  
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    top: 100%; 
+    left: 0; 
+    text-align: left;
+    max-height: 200px; /* adjust the height to your liking */
+    overflow-y: auto;
+    }
+  
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown-content a:hover {
+    background-color: #ddd;
+  }
+  .show {
+    display: block;
+  }
+  
+  
+  
+  button {
+   
+    display: block;
+    border-radius: 6px;
+    text-align: center;
+    margin: 50px;
+    padding: 10px;
+    font-size: 20px;
+  }
+  
+  button:hover {
+    
+    display: block;
+    border-radius: 6px;
+    text-align: center;
+    cursor: pointer;
+  }
+  
