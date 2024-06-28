@@ -51,7 +51,12 @@ connection.connect(function(err) {
 
     const caseIdList = allCaseIds.map(item => item.caseId);
     const query2 = `
-      SELECT caseId, caseTitle, case_created_at, totalClaimValue, hearingDatesSet, parties
+      SELECT caseId, caseTitle, case_created_at, totalClaimValue, hearingDatesSet, parties,
+             borrowerName, contractNumber, arbitratorName, caseStatus,
+             firstNoticeDate, secondNoticeDate, thirdNoticeDate,
+             firstNoticeDispatchDate, secondNoticeDispatchDate, thirdNoticeDispatchDate,
+             Sec17raisedDate, Sec17type, Sec17petitionDate,
+             awardDate, awardDispatchDate, Sec21dispatchDate
       FROM mis_cases_parties
       WHERE caseId IN (?)
     `;
@@ -69,7 +74,11 @@ connection.connect(function(err) {
       const worksheetData = [
         [
           'CASE ID', 'CASE TITLE', 'DATE OF CREATION', 'TOTAL CLAIM VALUE',
-          'HEARING DATES ', 'AGENT ID', 'PARTY ID'
+          'HEARING DATES', 'AGENT ID', 'PARTY ID', 'BORROWER NAME', 'CONTRACT NUMBER',
+          'ARBITRATOR NAME', 'CASE STATUS', 'FIRST NOTICE DATE', 'SECOND NOTICE DATE',
+          'THIRD NOTICE DATE', 'FIRST NOTICE DISPATCH DATE', 'SECOND NOTICE DISPATCH DATE',
+          'THIRD NOTICE DISPATCH DATE', 'SECTION 17 RAISED DATE', 'SECTION 17 TYPE',
+          'SECTION 17 PETITION DATE', 'AWARD DATE', 'AWARD DISPATCH DATE', 'SECTION 21 DISPATCH DATE'
         ]
       ];
 
@@ -83,10 +92,15 @@ connection.connect(function(err) {
 
       allCaseIds.forEach(item => {
         const caseData = caseDataMap[item.caseId];
-        if (caseData && caseData.caseId && caseData.caseTitle && caseData.case_created_at && caseData.totalClaimValue) {
+        if (caseData && caseData.caseId && caseData.caseTitle && caseData.case_created_at && caseData.totalClaimValue && caseData.parties) {
           worksheetData.push([
             caseData.caseId.toString(), caseData.caseTitle, formatDate(caseData.case_created_at), caseData.totalClaimValue.toString(),
-            (caseData.hearingDatesSet ? caseData.hearingDatesSet.toString() : ''), item.agentId.toString(), item.partyid.toString()
+            (caseData.hearingDatesSet ? caseData.hearingDatesSet.toString() : ''), item.agentId.toString(), item.partyid.toString(),
+            caseData.borrowerName, caseData.contractNumber, caseData.arbitratorName, caseData.caseStatus,
+            caseData.firstNoticeDate, caseData.secondNoticeDate, caseData.thirdNoticeDate,
+            caseData.firstNoticeDispatchDate, caseData.secondNoticeDispatchDate, caseData.thirdNoticeDispatchDate,
+            caseData.Sec17raisedDate, caseData.Sec17Type, caseData.Sec17petitionDate,
+            caseData.awardDate, caseData.awardDispatchDate, caseData.Sec21DispatchDate
           ]);
         }
       });
@@ -98,9 +112,10 @@ connection.connect(function(err) {
       for (let C = headerRange.s.c; C <= headerRange.e.c; ++C) {
         const cell_address = xlsx.utils.encode_cell({ c: C, r: 0 });
         if (!worksheet[cell_address]) continue;
-        if (!worksheet[cell_address].s) worksheet[cell_address].s = {};
-        worksheet[cell_address].s.font = {
-          bold: true
+        worksheet[cell_address].s = {
+          font: {
+            bold: true
+          }
         };
       }
 
