@@ -13,6 +13,7 @@ const connection = mysql.createConnection({
 
 
 app.get('/api/lot-dates', (req, res) => {
+  // console.log("got");
   connection.query('SELECT DISTINCT DATE_FORMAT(case_created_at, "%Y-%m-%d") as case_created_at FROM mis_cases_parties', (err, results) => {
     if (err) {
       console.log(err);
@@ -20,13 +21,13 @@ app.get('/api/lot-dates', (req, res) => {
     } else {
       console.log(results)
       const dates = results.map(row => row.case_created_at);
-      console.log("Dates fetched and returned")
+      console.log("Dates fetched and returned");
       res.json(dates);
     }
   });
 });
 
-app.listen(3000, () => {
+app.listen(3000, () => { 
   console.log('Server listening on port 3000');
 });
 

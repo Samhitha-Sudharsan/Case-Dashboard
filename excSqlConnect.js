@@ -4,6 +4,7 @@ const Excel = require('exceljs');
 const app = express();
 const cors = require('cors');
 app.use(cors());
+
 app.get('/', (req, res) => {    
   res.send('Server is running');
 });
@@ -17,7 +18,7 @@ const connection = mysql.createConnection({
   database: 'justact_staging'
 });
 
-//   console.log("after creating connection")
+  console.log("after creating connection")
 
   connection.connect((err) => {
     if (err) {

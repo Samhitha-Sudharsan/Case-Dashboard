@@ -33,6 +33,7 @@
                         .then(response => response.json())
                         .then(dates => {
                           dates.sort((a, b) => {
+                            // console.log("sorting dates");
                             const dateA = new Date(a);
                             const dateB = new Date(b);
                             return dateB - dateA;
@@ -148,7 +149,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'case_data.xls';
+            a.download = 'output.xls';
             a.click();
             URL.revokeObjectURL(url);
           });
