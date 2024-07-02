@@ -254,7 +254,7 @@ const createTables = async () => {
   const queries = [
     `
     CREATE TABLE IF NOT EXISTS mis_cases_parties (
-      caseId varchar(255),
+      caseId varchar(255) PRIMARY KEY,
       caseTitle varchar(255),
       case_created_at datetime,
       parties json,
@@ -301,13 +301,9 @@ const createTables = async () => {
 
 
 
-const main = async () => {
-  connection.connect(async function (err) {
-    if (err) throw err;
-    console.log("Connected!");
 
     try {
-      await createTables();
+      createTables();
       console.log("Tables created successfully");
 
       const totalUpdated = await processInBatches();
@@ -317,8 +313,8 @@ const main = async () => {
     } finally {
       connection.end();
     }
-  });
-};
+ 
+
 
 main();
  

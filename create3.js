@@ -10,7 +10,7 @@ const connection = mysql.createConnection({
 const qry = `
   CREATE TABLE IF NOT EXISTS mis_cases_parties (
 
-    caseId varchar(255),
+    caseId varchar(255) PRIMARY KEY,
     caseTitle varchar(255),
     case_created_at datetime,
     parties json,
