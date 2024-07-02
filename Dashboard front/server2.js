@@ -23,7 +23,7 @@ connection.connect(function(err) {
         console.log(`fromDate: ${fromDate}, toDate: ${toDate}`);
 
         const query1 = `
-            SELECT partyname 
+            SELECT DISTINCT partyname 
             FROM mis_party_agents 
             WHERE agentEmail = ?
         `;
@@ -39,18 +39,20 @@ connection.connect(function(err) {
             const query2 = `
                 SELECT parties 
                 FROM mis_cases_parties 
-                WHERE case_created_at BETWEEN ? AND ? and parties is not null
+                WHERE case_created_at BETWEEN ? AND ? and parties is not NULL
             `;
             connection.query(query2, [fromDate, toDate], function(err, result) {
                 if (err) throw err;
                 const caseParties = result.map(row => JSON.parse(row.parties)).flat();
-// console.log(caseParties)
+                console.log(`caseParties: ${caseParties}`);
+
                 const filteredParties = parties.filter(partyName => {
                     return caseParties.some(caseParty => caseParty.partyname === partyName);
                 });
                 console.log(`filteredParties: ${filteredParties}`);
 
-                res.json(filteredParties); 
+                const distinctFilteredParties = [...new Set(filteredParties)];
+                res.json(distinctFilteredParties); 
             });
         });
     });
@@ -59,4 +61,3 @@ connection.connect(function(err) {
 app.listen(3000, () => {
     console.log("Server listening on port 3000");
 });
-//http://localhost:3000/api/get-parties?from=2020-01-01&to=2022-01-31

@@ -22,7 +22,8 @@ const qry = `
     totalClaimValue decimal(17,4),
     hearingDatesSet json,
     arbitratorName varchar(255),
-    caseStatus varchar(255),
+    caseStatus enum('pending','draft','completed'),
+    exactStatus enum('draft','pendingRegistrationFee','awaitingRespondentAcceptance','negotiationOngoing','negotiationReached','claimantPaidNegotiationSuccessFee','respondentPaidNegotiationSuccessFee','bothPaidNegotiationSuccessFee','quitByClaimant','quitByRespondent','respondentDeniedAcceptance','closedByCaseManager','arbitrationReference','noticeToArbitrate','appointmentOfArbitrator','acceptanceByArbitrator','firstHearingIntimation','filingStatementofClaim','filingofSection17','section17OrderPassed','filingofStatementofDefence','rejoinderfromClaimant','surrejoinderFromRespondent','2ndNoticeMOM','crossExaminationClaimantWitness','crossExaminationRespondentWitness','arguments','finalAward','reservedForAward','waitingForCaseApproval','waitingForArbitratorConfirmation'),
     noticeDates datetime,
     noticeDispatchDates datetime,
     Sec17raisedDate datetime,
@@ -36,7 +37,8 @@ const qry = `
     thirdNoticeDate datetime,
     firstNoticeDispatchDate datetime,
     secondNoticeDispatchDate datetime,
-    thirdNoticeDispatchDate datetime
+    thirdNoticeDispatchDate datetime,
+    lotID varchar(255)
 
   );
 `;
@@ -60,38 +62,16 @@ const qry2 = `
   );
 `;
 
-connection.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-  connection.query(qry, function(err, result) {
-    if (err) throw err;
-    console.log("Created table successfully");
-  });
-  connection.query(qry2, function(err, result) {
-    if (err) throw err;
-    console.log("Created table successfully");
-  });
-  connection.query("SHOW TABLES;", function(err, result) {
-    if (err) throw err;
-    console.log("Showing tables\n");
-    for (var i = 0; i < result.length; i++) {
-      console.log(JSON.stringify(result[i]));
-    }
-  });
-  connection.end();
-});
+
 
 const query = `
-  INSERT INTO mis_cases_parties (caseId, case_created_at,caseTitle, borrowerName, caseOwnerId, totalClaimValue, hearingDatesSet, contractNumber)
-  SELECT id, created_at, title, respondentName, ownerId, totalClaimValue, hearingDatesSet, loanAccountNo
+  INSERT INTO mis_cases_parties (caseId, case_created_at,caseTitle, borrowerName, caseOwnerId, totalClaimValue, hearingDatesSet, contractNumber,caseStatus, exactStatus)
+  SELECT id, created_at, title, respondentName, ownerId, totalClaimValue, hearingDatesSet, loanAccountNo, summaryStatus, status
   FROM cases
-  ON DUPLICATE KEY UPDATE case_created_at = VALUES(case_created_at), caseId = VALUES(caseId), caseTitle = VALUES(caseTitle), borrowerName = VALUES(borrowerName), contractNumber = VALUES(contractNumber);
+  ON DUPLICATE KEY UPDATE case_created_at = VALUES(case_created_at), caseId = VALUES(caseId), caseTitle = VALUES(caseTitle), borrowerName = VALUES(borrowerName), contractNumber = VALUES(contractNumber), caseStatus = VALUES(caseStatus), exactStatus = VALUES(exactStatus);
 `;
 
-connection.query(query, function(err, result) {
-  if (err) throw err;
-  console.log("Inserted caseNo, caseTitle,contractnumber and case_created_at successfully");
-});
+
 
 //Take caseId from mis_case_parties , check caseId in case_parties , collect all the partyIds and partyRoles corresponding to th erelevant caseId tyhen go and get party name and partykind for those partyIds from the patries table and make it as a json , for eg:  {{partyid:1,partyrole:"respondent",partykind:"organization", partyname: "Anand"}, {partyid:2,partyrole:"respondent",partykind:"individual", partyname: "Samhitha"}} for caseId 1 . parties json will be of the form {{parttyid:int, partrole : enum("respondent","claimant"), partykind : enum('individual','organization','others'), partyname: varchar(255)}}. partykind and partyname is stored as kind and name in parties. partyrole and partyid is stored as partyId and partyRole in case_parties. 
 
@@ -119,10 +99,7 @@ connection.query(query, function(err, result) {
 
 // need to check if there is more than one partyId alloted for a given caseId by checking all instances of the caseId in case_parties table nd if multiple partties exist they should also be included in the json with partyId1 and partyId2 as two seperate gropus inside the parties json. current code only considers only the first occurence of the caseId in case_parties table and takes the partyId corresponding only to the first. Its almost like a nested json object
 
-connection.query(query2, function(err, result) {
-  if (err) throw err;
-  console.log("Inserted parties successfully");
-});
+
 
 
 
@@ -135,10 +112,6 @@ const query3 = `
   ON DUPLICATE KEY UPDATE partyid = VALUES(partyid), agentrole = VALUES(agentrole), agentId = VALUES(agentId), agentEmail = VALUES(agentEmail);
 `;
 
-connection.query(query3, function(err, result) {
-  if (err) throw err;
-  console.log("Inserted partyId,  agentrole, agentId, agentEmail into mis_party_agents successfully");
-});
 
 
 const query4 = `
@@ -147,10 +120,7 @@ const query4 = `
   SET mpa.partyname = p.name;
 `;
 
-connection.query(query4, function(err, result) {
-  if (err) throw err;
-  console.log("Updated partyname in mis_party_agents successfully");
-});
+
 
 
 const query5 = `
@@ -168,6 +138,48 @@ const query5 = `
     END
   );
 `;
+
+connection.connect(function(err) {
+    if (err) throw err;
+    console.log("Connected!");
+connection.query(qry, function(err, result) {
+      if (err) throw err;
+      console.log("Created table successfully");
+    });
+connection.query(qry2, function(err, result) {
+      if (err) throw err;
+      console.log("Created table successfully");
+    });
+connection.query("SHOW TABLES;", function(err, result) {
+      if (err) throw err;
+      console.log("Showing tables\n");
+      for (var i = 0; i < result.length; i++) {
+      //   console.log(JSON.stringify(result[i]));
+      }
+    });
+    connection.end();
+  });
+
+connection.query(query, function(err, result) {
+    if (err) console.log(err);
+    console.log("Inserted caseNo, caseTitle,contractnumber and case_created_at successfully");
+  });
+
+connection.query(query2, function(err, result) {
+    if (err) throw err;
+    console.log("Inserted parties successfully");
+  });
+connection.query(query3, function(err, result) {
+    if (err) throw err;
+    console.log("Inserted partyId,  agentrole, agentId, agentEmail into mis_party_agents successfully");
+  });
+
+connection.query(query4, function(err, result) {
+    if (err) throw err;
+    console.log("Updated partyname in mis_party_agents successfully");
+  });
+  
+
 
 connection.query(query5, function(err, result) {
   if (err) throw err;

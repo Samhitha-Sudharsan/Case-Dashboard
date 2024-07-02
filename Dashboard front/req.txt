@@ -80,7 +80,7 @@ agent - specific cases
 
 Intermediate tables 
 specific tables for MIS
-fronetnd pakages
+fronetnd packages
 
 AG Grid : https://www.ag-grid.com/ (backup , paid , can show a table without features)
 Datatables : https://datatables.net/ (good to implement, has features and an available API , tends to be slow , compatible with js and css)
@@ -91,3 +91,5 @@ hands-on-table: https://handsontable.com/ (compatible with plain javascript , ea
 tabulator : https://tabulator.info/ (has react, vue and angular listed as supported frameworks , has features and a sample code )
 
 grid js :https://gridjs.io/ (javascript package , very simple  ) 
+
+

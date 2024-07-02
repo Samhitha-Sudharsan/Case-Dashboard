@@ -1,6 +1,5 @@
 const mysql = require('mysql');
 const xlsx = require('xlsx');
-// const fs = require('fs');
 
 const connection = mysql.createConnection({
   host: 'justact-staging-db.cdzlwxwbylqw.ap-south-1.rds.amazonaws.com',
@@ -52,11 +51,11 @@ connection.connect(function(err) {
     const caseIdList = allCaseIds.map(item => item.caseId);
     const query2 = `
       SELECT caseId, caseTitle, case_created_at, totalClaimValue, hearingDatesSet, parties,
-             borrowerName, contractNumber, arbitratorName, caseStatus,
-             firstNoticeDate, secondNoticeDate, thirdNoticeDate,
-             firstNoticeDispatchDate, secondNoticeDispatchDate, thirdNoticeDispatchDate,
-             Sec17raisedDate, Sec17type, Sec17petitionDate,
-             awardDate, awardDispatchDate, Sec21dispatchDate
+            borrowerName, contractNumber, arbitratorName, caseStatus,
+            firstNoticeDate, secondNoticeDate, thirdNoticeDate,
+            firstNoticeDispatchDate, secondNoticeDispatchDate, thirdNoticeDispatchDate,
+            Sec17raisedDate, Sec17type, Sec17petitionDate,
+            awardDate, awardDispatchDate, Sec21dispatchDate, lotID
       FROM mis_cases_parties
       WHERE caseId IN (?)
     `;
@@ -78,7 +77,7 @@ connection.connect(function(err) {
           'ARBITRATOR NAME', 'CASE STATUS', 'FIRST NOTICE DATE', 'SECOND NOTICE DATE',
           'THIRD NOTICE DATE', 'FIRST NOTICE DISPATCH DATE', 'SECOND NOTICE DISPATCH DATE',
           'THIRD NOTICE DISPATCH DATE', 'SECTION 17 RAISED DATE', 'SECTION 17 TYPE',
-          'SECTION 17 PETITION DATE', 'AWARD DATE', 'AWARD DISPATCH DATE', 'SECTION 21 DISPATCH DATE'
+          'SECTION 17 PETITION DATE', 'AWARD DATE', 'AWARD DISPATCH DATE', 'SECTION 21 DISPATCH DATE','LOTID'
         ]
       ];
 
@@ -92,15 +91,32 @@ connection.connect(function(err) {
 
       allCaseIds.forEach(item => {
         const caseData = caseDataMap[item.caseId];
-        if (caseData && caseData.caseId && caseData.caseTitle && caseData.case_created_at && caseData.totalClaimValue && caseData.parties) {
+        if (caseData) {
           worksheetData.push([
-            caseData.caseId.toString(), caseData.caseTitle, formatDate(caseData.case_created_at), caseData.totalClaimValue.toString(),
-            (caseData.hearingDatesSet ? caseData.hearingDatesSet.toString() : ''), item.agentId.toString(), item.partyid.toString(),
-            caseData.borrowerName, caseData.contractNumber, caseData.arbitratorName, caseData.caseStatus,
-            caseData.firstNoticeDate, caseData.secondNoticeDate, caseData.thirdNoticeDate,
-            caseData.firstNoticeDispatchDate, caseData.secondNoticeDispatchDate, caseData.thirdNoticeDispatchDate,
-            caseData.Sec17raisedDate, caseData.Sec17Type, caseData.Sec17petitionDate,
-            caseData.awardDate, caseData.awardDispatchDate, caseData.Sec21DispatchDate
+            caseData.caseId ? caseData.caseId.toString() : '',
+            caseData.caseTitle ? caseData.caseTitle : '',
+            caseData.case_created_at ? formatDate(caseData.case_created_at) : '',
+            caseData.totalClaimValue ? caseData.totalClaimValue.toString() : '',
+            caseData.hearingDatesSet ? caseData.hearingDatesSet.toString() : '',
+            item.agentId.toString(),
+            item.partyid.toString(),
+            caseData.borrowerName ? caseData.borrowerName : '',
+            caseData.contractNumber ? caseData.contractNumber : '',
+            caseData.arbitratorName ? caseData.arbitratorName : '',
+            caseData.caseStatus ? caseData.caseStatus : '',
+            caseData.firstNoticeDate ? caseData.firstNoticeDate : '',
+            caseData.secondNoticeDate ? caseData.secondNoticeDate : '',
+            caseData.thirdNoticeDate ? caseData.thirdNoticeDate : '',
+            caseData.firstNoticeDispatchDate ? caseData.firstNoticeDispatchDate : '',
+            caseData.secondNoticeDispatchDate? caseData.secondNoticeDispatchDate : '',
+            caseData.thirdNoticeDispatchDate? caseData.thirdNoticeDispatchDate : '',
+            caseData.Sec17raisedDate? caseData.Sec17raisedDate : '',
+            caseData.Sec17Type? caseData.Sec17Type : '',
+            caseData.Sec17petitionDate? caseData.Sec17petitionDate : '',
+            caseData.awardDate? caseData.awardDate : '',
+            caseData.awardDispatchDate? caseData.awardDispatchDate : '',
+            caseData.Sec21DispatchDate? caseData.Sec21DispatchDate : '',
+            caseData.lotID? caseData.lotID : ''
           ]);
         }
       });
@@ -120,10 +136,23 @@ connection.connect(function(err) {
       }
 
       xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-      xlsx.writeFile(workbook, 'output.xlsx');
-      console.log("Excel file generated successfully");
 
-      connection.end();
+      // Generate XLS file
+      const wbout = xlsx.write(workbook, {
+        bookType: "xls",
+        type: "binary"
+      });
+
+      // Return the generated XLS file data
+      return wbout;
     });
   });
 });
+
+const MIS = {
+  getCaseData: function() {
+    return wbout;
+  }
+};
+
+module.exports = MIS;
