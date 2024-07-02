@@ -1,15 +1,15 @@
 $(document).ready(function() {
-  
+  // Initialize Multiselect plugin
   $('#party-name').multiselect({
     includeSelectAllOption: true,
     enableFiltering: true,
     maxHeight: 200,
     onChange: function(option, checked) {
-      fetchAndPopulateData();
+      applyFilters();
     }
   });
 
-  
+  // Initialize DataTable with empty dataset and columns
   $('#cases-table').DataTable({
     columns: [
       { title: 'Case ID' },
@@ -20,7 +20,7 @@ $(document).ready(function() {
     ]
   });
 
-  
+  // Function to fetch and populate data
   function fetchAndPopulateData() {
     const fromDate = $('#from-date').val();
     const toDate = $('#to-date').val();
@@ -37,42 +37,20 @@ $(document).ready(function() {
           const parties = data.parties;
           const cases = data.cases;
 
-          
+          // Clear and rebuild party name options
           const partySelect = $('#party-name');
-          // partySelect.empty();
+          partySelect.empty();
           parties.forEach(party => {
             const option = $('<option></option>').text(party).val(party);
             partySelect.append(option);
           });
           partySelect.multiselect('rebuild');
 
-          
-          $('#apply-filter').off('click').on('click', function() {
-            const selectedParties = $('#party-name').val();
-            const selectedCaseStatus = $('#case-status').val();
+          // Store cases data for filtering
+          $('#cases-table').data('cases', cases);
 
-            const filteredCases = cases.filter(caseDetail => {
-              return caseDetail.parties.some(party => selectedParties.includes(party)) &&
-                filterByCaseStatus(caseDetail.caseStatus, selectedCaseStatus);
-            });
-
-            
-            $('#cases-table').DataTable().clear().draw();
-
-            
-            filteredCases.forEach(caseDetail => {
-              $('#cases-table').DataTable().row.add([
-                caseDetail.caseId,
-                caseDetail.caseTitle,
-                caseDetail.lotID,
-                caseDetail.parties.join(', '),
-                caseDetail.caseStatus
-              ]).draw();
-            });
-          });
-
-          
-          $('#apply-filter').click();
+          // Apply initial filters
+          applyFilters();
         },
         error: function(err) {
           console.error('Error fetching data:', err);
@@ -81,7 +59,7 @@ $(document).ready(function() {
     }
   }
 
-  
+  // Function to filter cases by status
   function filterByCaseStatus(caseStatus, selectedCaseStatus) {
     switch (selectedCaseStatus) {
       case 'All':
@@ -97,6 +75,40 @@ $(document).ready(function() {
     }
   }
 
-  
+  // Function to apply filters
+  function applyFilters() {
+    const selectedParties = $('#party-name').val() || [];
+    const selectedCaseStatus = $('#case-status').val() || 'All';
+
+    const cases = $('#cases-table').data('cases') || [];
+
+    const filteredCases = cases.filter(caseDetail => {
+      const partyMatch = selectedParties.length === 0 || caseDetail.parties.some(party => selectedParties.includes(party));
+      const statusMatch = filterByCaseStatus(caseDetail.caseStatus, selectedCaseStatus);
+      return partyMatch && statusMatch;
+    });
+
+    // Clear existing DataTable rows
+    $('#cases-table').DataTable().clear().draw();
+
+    // Populate DataTable with filtered cases
+    filteredCases.forEach(caseDetail => {
+      $('#cases-table').DataTable().row.add([
+        caseDetail.caseId,
+        caseDetail.caseTitle,
+        caseDetail.lotID,
+        caseDetail.parties.join(', '),
+        caseDetail.caseStatus
+      ]).draw();
+    });
+  }
+
+  // Bind date change event to fetch data
   $('#from-date, #to-date').on('change', fetchAndPopulateData);
+
+  // Bind case status change event to apply filters
+  $('#case-status').on('change', applyFilters);
+
+  // Initial data fetch
+  fetchAndPopulateData();
 });
