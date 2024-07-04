@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard User Portal</title>
+  <link rel="stylesheet" href="dashboard2.css"/>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@0.9.15/dist/css/bootstrap-multiselect.css"/>
+  <style>
+    .filter-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .filter-container label {
+      margin-right: 10px;
+    }
+    .filter-container select#party-name {
+      width: 200px;
+    }
+    .chart-container {
+      width: 300px;
+      height: 300px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <!-- Your navigation menu remains the same -->
+  </nav>
+  <div class="filter-container">
+    <div>
+      <button id="generate-mis">Generate MIS</button>
+      <label for="from-date">From Date:</label>
+      <input type="date" id="from-date" />
+      <label for="to-date">To Date:</label>
+      <input type="date" id="to-date" />
+      <label for="party-name">Party Name:</label>
+      <select id="party-name" multiple>
+        <!-- This will be populated dynamically using JavaScript -->
+      </select>
+      <label for="case-status">Case Status:</label>
+      <select id="case-status">
+        <option value="">All</option>
+        <option value="Draft">Draft</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+        <!-- Add more options as needed -->
+      </select>
+    </div>
+    <div>
+      <label for="lot-id">Lot ID:</label>
+      <select id="lot-id">
+        <!-- This will be populated dynamically using JavaScript -->
+      </select>
+      <button id="apply-filter">Apply Filter</button>
+    </div>
+  </div>
+  <div class="filter-container">
+    <div style="flex: 1;"></div>
+    <div class="chart-container">
+      <canvas id="status-pie-chart"></canvas>
+    </div>
+    <div style="flex: 1;"></div>
+  </div>
+  <div class="table-container">
+    <table id="cases-table" class="display">
+      <thead>
+        <tr>
+          <th>Lot ID</th>
+          <th>Case ID</th>
+          <th>Case Name</th>
+          <th>Contract Number</th>
+          <th>Case Status</th>
+          <th>Umbrella Status</th>
+        </tr>
+      </thead>
+      <tbody id="cases-table-body">
+        <!-- This will be populated dynamically using JavaScript -->
+      </tbody>
+    </table>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.4/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@0.9.15/dist/js/bootstrap-multiselect.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script3.js"></script>
+</body>
+</html>

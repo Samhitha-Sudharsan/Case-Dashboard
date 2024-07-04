@@ -17,10 +17,12 @@ connection.connect(function(err) {
 
     app.get('/api/get-parties-and-cases', (req, res) => {
         const useremail = 'anandsingh039@gmail.com';
-        const fromDate = req.query.from; 
-        const toDate = req.query.to; 
+        const fromDate = req.query.from;
+        const toDate = req.query.to;
+        const fromCaseID = req.query.fromCaseID; // Retrieve from-case-id from query parameters
+        const toCaseID = req.query.toCaseID; // Retrieve to-case-id from query parameters
 
-        console.log(`fromDate: ${fromDate}, toDate: ${toDate}`);
+        console.log(`fromDate: ${fromDate}, toDate: ${toDate}, fromCaseID: ${fromCaseID}, toCaseID: ${toCaseID}`);
 
         const query1 = `
             SELECT DISTINCT partyname 
@@ -31,17 +33,25 @@ connection.connect(function(err) {
             if (err) throw err;
             if (result.length === 0) {
                 console.log('No agents or parties found for this email');
-                return res.json({ parties: [], cases: [] }); 
+                return res.json({ parties: [], cases: [] });
             }
-            const parties = result.map(row => row.partyname); 
-            // console.log(`parties: ${parties}`);
+            const parties = result.map(row => row.partyname);
 
-            const query2 = `
-                SELECT caseId, caseTitle, lotID, caseStatus, parties 
+            let query2 = `
+                SELECT caseId, caseTitle, lotID, contractNumber, caseStatus, exactStatus, parties 
                 FROM mis_cases_parties 
                 WHERE case_created_at BETWEEN ? AND ? and parties is not null
             `;
-            connection.query(query2, [fromDate, toDate], function(err, result) {
+            const queryParams = [fromDate, toDate];
+
+            // Append caseID range condition if provided
+            if (fromCaseID && toCaseID) {
+                query2 += ` AND caseId BETWEEN ? AND ?`;
+                queryParams.push(fromCaseID);
+                queryParams.push(toCaseID);
+            }
+
+            connection.query(query2, queryParams, function(err, result) {
                 if (err) throw err;
                 const caseDetails = result.map(row => {
                     const caseParties = JSON.parse(row.parties).map(p => p.partyname);
@@ -49,11 +59,12 @@ connection.connect(function(err) {
                         caseId: row.caseId,
                         caseTitle: row.caseTitle,
                         lotID: row.lotID,
+                        contractNumber: row.contractNumber,
                         caseStatus: row.caseStatus,
+                        exactStatus: row.exactStatus,
                         parties: caseParties
                     };
                 });
-                // console.log(`caseDetails: ${JSON.stringify(caseDetails)}`);
 
                 res.json({ parties, cases: caseDetails });
             });
@@ -64,8 +75,3 @@ connection.connect(function(err) {
 app.listen(3000, () => {
     console.log("Server listening on port 3000");
 });
-
-
-//contract number , remove parties , add another column named case stage where we show the exact status under 6 main headers
-// give them a way to select from what case to what cases, lot ID dropdown , Case ID range , Contract ID range
-//Summary stats, pie chart of LOTIDs 

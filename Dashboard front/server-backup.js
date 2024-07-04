@@ -64,3 +64,7 @@ connection.connect(function(err) {
 app.listen(3000, () => {
     console.log("Server listening on port 3000");
 });
+
+
+//contract number , remove parties , add another column named case stage where we show the exact status under 6 main headers
+// give them a way to select from what case to what case 
