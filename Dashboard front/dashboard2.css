@@ -1,0 +1,94 @@
+/* dashboard.css */
+
+/* Global styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+/* Navigation menu styles */
+nav {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Filter container styles */
+.filter-container {
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.filter-container label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.filter-container input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+}
+
+.filter-container select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+}
+
+.filter-container button[type="button"] {
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.filter-container button[type="button"]:hover {
+  background-color: #3e8e41;
+}
+
+/* Table container styles */
+.table-container {
+  margin-top: 20px;
+}
+
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-container th, .table-container td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.table-container th {
+  background-color: #f0f0f0;
+}
+
+.table-container tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#generate-mis{
+  
+  font-size: large;
+  float: right;
+  margin-right:20px;
+  margin-bottom: 20px;
+}
