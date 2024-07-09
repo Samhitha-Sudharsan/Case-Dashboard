@@ -1,10 +1,10 @@
 const mysql = require('mysql');
 
 const connection = mysql.createConnection({
-    host: 'justact-staging-db.cdzlwxwbylqw.ap-south-1.rds.amazonaws.com',
-    user: 'justact',
-    password: 'justact123!',
-    database: 'justact_staging',
+    host: 'dbhostname',
+    user: 'dbuser',
+    password: 'dbpwd',
+    database: 'db',
     acquireTimeout: 1000000,
     connectTimeout: 1000000
 });
