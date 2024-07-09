@@ -14,17 +14,17 @@ app.get('/get-mis', (req, res) => {
 
 
     const connection = mysql.createConnection({
-    host: 'justact-staging-db.cdzlwxwbylqw.ap-south-1.rds.amazonaws.com',
-    user: 'justact',
-    password: 'justact123!',
-    database: 'justact_staging'
+    host: 'hostname',
+    user: 'user',
+    password: 'hostpwd',
+    database: 'hostdb'
     });
 
     connection.connect(function(err) {
     if (err) throw err;
     console.log("Connected!");
 
-    const userEmail = 'anandsingh039@gmail.com';
+    const userEmail = 'example@gmail.com';
 
     const query1 = `
         SELECT agentId, partyid, agentCaseIds
