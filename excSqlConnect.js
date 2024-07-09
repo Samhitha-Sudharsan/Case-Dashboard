@@ -12,10 +12,10 @@ app.get('/', (req, res) => {
 app.get('/generate-excel', async (req, res) => {
 //   console.log("sadhkjasdh")
 const connection = mysql.createConnection({
-  host: 'justact-staging-db.cdzlwxwbylqw.ap-south-1.rds.amazonaws.com',
-  user: 'justact',
-  password: 'justact123!',
-  database: 'justact_staging'
+  host: '',
+  user: '',
+  password: '',
+  database: ''
 });
 
   console.log("after creating connection")
